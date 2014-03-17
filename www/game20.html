@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>같은그림 찾기</title>
+<link type="text/css" rel="stylesheet" href="game.css" />
+</head>
+<body>
+	<!-- <script src="game.js"></script> -->
+<div id="title">
+	<h1>같은 그림 찾기</h1>
+	<input type='button' onClick="initGame()" value='Game start'>
+</div>
+<div class="container"></div>
+<script>
+	"use strict";
+	//var card = new Card;
+	var randomNumber = new Array(24);
+	var counter = 0;
+	var timechk = new Array(3);
+	var pairs = new Array(3);
+	var identity = new Array(3);
+	function initGame() {
+		shuffle();
+		var initBtn = document.querySelector('#title');
+		var btn = document.querySelector('input');
+		initBtn.removeChild(btn);
+		var cont = document.querySelector('.container');
+		for (var i = 0; i < randomNumber.length; i++) {
+			var div = document.createElement('div');
+			var j;
+			var img = document.createElement('img');
+			if (randomNumber[i] >= 13) {
+				j = randomNumber[i] % 13 + 1;
+			} else {
+				j = randomNumber[i];
+			}
+			div.setAttribute('id', randomNumber[i]);
+			div.setAttribute('class', 'CARD');
+			div.setAttribute('name', j);
+			cont.appendChild(div);
+			div.addEventListener('click',function() {
+        var parent = document.getElementById(this.getAttribute('id'));
+				var k;
+				if (this.getAttribute('id') >= 13) {
+					k = this.getAttribute('id') % 13 + 1;
+				} else {
+					k = this.getAttribute('id');
+				}
+								//console.log(this.getAttribute('id'));
+			  img.setAttribute('src', 'image/' + k + '.jpg');
+				img.setAttribute('width', '100px');
+				parent.appendChild(img);
+				counter++;
+				timechk[counter]=new Date().getTime();
+				/* if((timechk[2]-timechk[1])>500){
+					counter--;
+				} */
+				//console.log(timechk[2]-timechk[1]);
+				var timer = setTimeout(function() {
+					parent.removeChild(img);
+					//console.log(time);
+					timechk[counter+1]=new Date().getTime();
+					//console.log(timechk[counter], timechk[counter+1]);
+				}, 500);
+				//div.appendChild(img);
+				if (counter==3){
+					//console.log('3번째 선택');
+					counter=1;
+					pairs[counter]='';
+					pairs[counter+1]='';
+				}
+				if (counter == 1) {
+					pairs[counter] = this.getAttribute('name');
+					identity[counter] = this.getAttribute('id');
+					if (pairs[counter] == pairs[counter+1]) {
+						//console.log(pairs[counter], pairs[counter+1]);
+						if(identity[counter]!=identity[counter+1]){
+							var scored = document.createElement('img');
+							var scored2 = document.createElement('img');
+							scored.setAttribute('src', 'image/'  + pairs[counter] + '.jpg');
+							scored2.setAttribute('src', 'image/'  + pairs[counter] + '.jpg');
+				      scored.setAttribute('width','100px');
+				      scored2.setAttribute('width','100px');
+				      var parent1 = document.getElementById(identity[counter]);
+				      var parent2 = document.getElementById(identity[counter+1]);
+				      parent1.appendChild(scored);
+				      parent2.appendChild(scored2);
+							console.log(pairs);
+						}
+					}
+					
+				} else {
+					//counter = 0;
+					pairs[counter] = this.getAttribute('name');
+					identity[counter] = this.getAttribute('id');
+					if (pairs[counter] == pairs[counter-1]) {
+			      //console.log(pairs[counter], pairs[counter+1]);
+			      if(identity[counter]!=identity[counter-1]){
+			        var scored3 = document.createElement('img');
+			        var scored4 = document.createElement('img');
+	            scored3.setAttribute('src', 'image/'  + pairs[counter] + '.jpg');
+	            scored4.setAttribute('src', 'image/'  + pairs[counter] + '.jpg');
+		          scored3.setAttribute('width','100px');
+		          scored4.setAttribute('width','100px');
+		          var parent4 = document.getElementById(identity[counter]);
+		          var parent5 = document.getElementById(identity[counter-1]);
+		          parent4.appendChild(scored3);
+		          parent5.appendChild(scored4);
+		          //console.log(parent4, parent5);
+		        }
+		      }
+				}
+				//console.log('2count', pairs);
+			})
+		}
+	}
+	function shuffle() { //비중복 랜덤 배열 생성
+		var chk = true;
+		for (var i = 0; i < 24; i++) {
+			var rand = parseInt(Math.random() * 24 + 1);
+			chk = true;
+			for (var j = 0; j < i; j++) {
+				if (randomNumber[j] == rand) {
+					i--;
+					chk = false;
+				}
+			}
+			if (chk) {
+				randomNumber[i] = rand;
+			}
+		}
+	}
+</script>
+</body>
+</html>
